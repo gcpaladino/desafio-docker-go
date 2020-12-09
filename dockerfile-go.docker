@@ -1,0 +1,13 @@
+FROM golang:1.12-alpine
+
+RUN apk add --no-cache git
+
+# Set the Current Working Directory inside the container
+WORKDIR /app
+COPY . .
+
+# Build the Go app
+RUN go build -o ./out/main main.go
+
+# Run the binary program produced by `go install`
+CMD ["./out/main"]
