@@ -1,13 +1,9 @@
-FROM golang:1.12-alpine
+FROM golang:1.7.3 AS builder
+WORKDIR /go/src/github.com/gcpaladino/desafio-docker-go/ 
+COPY main.go .
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
-RUN apk add --no-cache git
-
-# Set the Current Working Directory inside the container
-WORKDIR /app
-COPY . .
-
-# Build the Go app
-RUN go build -o ./out/main main.go
-
-# Run the binary program produced by `go install`
-CMD ["./out/main"]
+FROM alpine:latest
+WORKDIR /root/
+COPY --from=builder /go/src/github.com/gcpaladino/desafio-docker-go/main .
+CMD ["./main"]  
